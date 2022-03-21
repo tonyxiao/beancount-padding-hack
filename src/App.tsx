@@ -20,19 +20,20 @@ function assertionErrorToPaddingTransaction(errStr: string) {
     .map((line) => {
       const match = line.match(
         // eslint-disable-next-line no-useless-escape
-        /Balance failed for (.*?): expected .*?(\w+) \(([\.\d]+) too much/
+        /Balance failed for (.*?): expected .*?(\w+) \(([\.\d]+) too (much|little)/
       );
       if (!match) {
-        return "";
+        return `; Error converting line: ${line}`
       }
-      const [accountName, commodity, quantity] = match.slice(1);
+      const [accountName, commodity, quantity, muchOrLittle] = match.slice(1);
+      const sign = muchOrLittle === 'much' ? '-' : ''
 
-      const out = `  ${accountName}  -${quantity} ${commodity} {}`;
+      const out = `  ${accountName}  ${sign}${quantity} ${commodity} {}`;
 
       console.log(out);
       return out;
     })
-    .filter((l) => !!l)
+    
     .join("\n");
 
   return [
