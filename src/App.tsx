@@ -19,6 +19,7 @@ function assertionErrorToPaddingTransaction(errStr: string) {
     .split("\n")
     .map((line) => {
       const match = line.match(
+        // eslint-disable-next-line no-useless-escape
         /Balance failed for (.*?): expected .*?(\w+) \(([\.\d]+) too much/
       );
       if (!match) {
