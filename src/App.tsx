@@ -44,8 +44,15 @@ function assertionErrorToPaddingTransaction(errStr: string) {
   ].join("\n");
 }
 
+function formatWhatsAppMessage(phone: string, message: string) {
+  const params = new URLSearchParams();
+  params.append("text", message);
+  return `https://wa.me/${phone}?${params.toString()}`;
+}
+
 function App() {
-  const [input, setInput] = React.useState(`
+  const [input, setInput] = React.useState(
+    `
 main.bean	93	Balance failed for Assets:Inventory:Fresh:Carrots: expected 0.2 CARR0TS_KG != accumulated 0 CARR0TS_KG (0.2 too little)
 main.bean	94	Balance failed for Assets:Inventory:Fresh:Cucumber: expected 0.3 CUCUMBER_KG != accumulated 1.2 CUCUMBER_KG (0.9 too much)
 main.bean	95	Balance failed for Assets:Inventory:Fresh:Asparagus: expected 0 ASPARAGUS_KG != accumulated 0.8 ASPARAGUS_KG (0.8 too much)
@@ -55,10 +62,24 @@ main.bean	98	Balance failed for Assets:Inventory:Fresh:BigRedChili: expected 0.2
 main.bean	99	Balance failed for Assets:Inventory:Fresh:BabyBokChoy: expected 0.2 BABYBOKCHOY_KG != accumulated 0.5 BABYBOKCHOY_KG (0.3 too much)
 main.bean	100	Balance failed for Assets:Inventory:Fresh:Daikon: expected 0.7 DAIKON_KG != accumulated 1 DAIKON_KG (0.3 too much)
 main.bean	101	Balance failed for Assets:Inventory:Fresh:Spinach: expected 0.7 SPINACH_KG != accumulated 0.5 SPINACH_KG (0.2 too little)
-`);
+`.trim()
+  );
+
+  const [message, setMessage] = React.useState(
+    `
+I'd like to redeem the FabX 100k Tabs voucher at Cafe Vespa
+I'd like to redeem the FabX 100k Tabs voucher at Bella by Sage
+I'd like to redeem the FabX 100k Tabs voucher at Poh Keh
+I'd like to redeem the FabX 100k Tabs voucher at Healthy Ubud
+I'd like to redeem the FabX 100k Tabs voucher at Schauberger Coffee
+I'd like to redeem the FabX 100k Tabs voucher at Kemulan Restaurant
+I'd like to redeem the FabX 100k Tabs voucher attending FabX at Swasti Beloved Cafe
+`.trim()
+  );
 
   return (
     <div className="App">
+      <h1>Beancount converter</h1>
       <header className="App-header">
         <div>
           <label>
@@ -74,6 +95,30 @@ main.bean	101	Balance failed for Assets:Inventory:Fresh:Spinach: expected 0.7 SP
             Output
             <textarea
               value={assertionErrorToPaddingTransaction(input)}
+            ></textarea>
+          </label>
+        </div>
+      </header>
+      <h1>WhatsApp link builder</h1>
+      <header className="App-header">
+        <div>
+          <label>
+            Input
+            <textarea
+              value={message}
+              onChange={(v) => setMessage(v.currentTarget.value)}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Output
+            <textarea
+              value={message
+                .split("\n")
+                .filter((l) => !!l.trim())
+                .map((msg) => formatWhatsAppMessage("+14156504450", msg.trim()))
+                .join("\n")}
             ></textarea>
           </label>
         </div>
