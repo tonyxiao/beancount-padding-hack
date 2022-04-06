@@ -67,15 +67,27 @@ main.bean	101	Balance failed for Assets:Inventory:Fresh:Spinach: expected 0.7 SP
 
   const [message, setMessage] = React.useState(
     `
-I'd like to redeem the FabX 100k Tabs voucher at Cafe Vespa
-I'd like to redeem the FabX 100k Tabs voucher at Bella by Sage
-I'd like to redeem the FabX 100k Tabs voucher at Poh Keh
-I'd like to redeem the FabX 100k Tabs voucher at Healthy Ubud
-I'd like to redeem the FabX 100k Tabs voucher at Schauberger Coffee
-I'd like to redeem the FabX 100k Tabs voucher at Kemulan Restaurant
-I'd like to redeem the FabX 100k Tabs voucher attending FabX at Swasti Beloved Cafe
+Cafe Vespa: I'd like to redeem the FabX 100k Tabs voucher at Cafe Vespa
+Bella by Sage: I'd like to redeem the FabX 100k Tabs voucher at Bella by Sage
+Poh Keh: I'd like to redeem the FabX 100k Tabs voucher at Poh Keh
+Healthy Ubud: I'd like to redeem the FabX 100k Tabs voucher at Healthy Ubud
+Schauberger Coffee: I'd like to redeem the FabX 100k Tabs voucher at Schauberger Coffee
+Kemulan Restaurant: I'd like to redeem the FabX 100k Tabs voucher at Kemulan Restaurant
+Swasti Beloved Cafe: I'd like to redeem the FabX 100k Tabs voucher at Swasti Beloved Cafe
 `.trim()
   );
+
+  const labelAndLinks = message
+    .split("\n")
+    .filter((l) => !!l.trim())
+    .map((l) => l.split(":"))
+    .map(
+      ([s1, s2]) =>
+        [
+          s1 && s2 ? s1 : "",
+          formatWhatsAppMessage("+14156504450", (s2 || s1).trim()),
+        ] as const
+    );
 
   return (
     <div className="App">
@@ -112,14 +124,22 @@ I'd like to redeem the FabX 100k Tabs voucher attending FabX at Swasti Beloved C
         </div>
         <div>
           <label>
-            Output
+            Raw links
             <textarea
-              value={message
-                .split("\n")
-                .filter((l) => !!l.trim())
-                .map((msg) => formatWhatsAppMessage("+14156504450", msg.trim()))
-                .join("\n")}
+              value={labelAndLinks.map(([_, link]) => link).join("\n")}
             ></textarea>
+          </label>
+        </div>
+        <div>
+          <label>
+            Formatted links
+            <div className="links">
+              {labelAndLinks.map(([label, link], index) => (
+                <a key={index} href={link}>
+                  {label || link}
+                </a>
+              ))}
+            </div>
           </label>
         </div>
       </header>
