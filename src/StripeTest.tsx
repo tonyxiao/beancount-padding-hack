@@ -1,20 +1,56 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, Stripe } from "@stripe/stripe-js";
 
 import {
   CardElement,
   Elements,
+  PaymentRequestButtonElement,
+  useStripe,
   // useStripe,
   // useElements,
 } from "@stripe/react-stripe-js";
 
 const stripePromise = loadStripe("pk_test_6pRNASCoBOKtIshFeQd4XMUh");
 
-function CheckoutForm() {
+export function CardForm() {
   // const _stripe = useStripe();
   // const elements = useElements();
   return <CardElement />;
+}
+
+function PaymentRequestButtonForm() {
+  const stripe = useStripe();
+  type PR = ReturnType<NonNullable<typeof stripe>["paymentRequest"]>;
+  const [paymentRequest, setPaymentRequest] = useState<PR>();
+
+  useEffect(() => {
+    var pr = stripe?.paymentRequest({
+      country: "US",
+      currency: "usd",
+      total: {
+        label: "Demo total",
+        amount: 1099,
+      },
+      requestPayerName: true,
+      requestPayerEmail: true,
+    });
+
+    pr?.canMakePayment().then((r) => {
+      if (r) {
+        setPaymentRequest(pr!);
+      } else {
+        console.log('Not availble for use', r)
+      }
+    });
+  }, [stripe]);
+
+  // const elements = useElements();
+  return paymentRequest ? (
+    <PaymentRequestButtonElement options={{ paymentRequest }} />
+  ) : (
+    <span>Waiting for payment requeest</span>
+  );
 }
 
 export function StripeTest() {
@@ -37,7 +73,8 @@ export function StripeTest() {
           },
         }}
       >
-        <CheckoutForm />
+        <PaymentRequestButtonForm />
+        {/* <CardForm /> */}
       </Elements>
     </div>
   );
