@@ -1,5 +1,6 @@
 import React from "react";
 import "./App.css";
+import { StripeTest } from "./StripeTest";
 
 /*
 Input: 
@@ -89,7 +90,7 @@ Swasti Beloved Cafe: I'd like to redeem the FabX 100k Tabs voucher at Swasti Bel
         ] as const
     );
 
-  return (
+  const app = (
     <div className="App">
       <h1>Beancount converter</h1>
       <header className="App-header">
@@ -145,6 +146,8 @@ Swasti Beloved Cafe: I'd like to redeem the FabX 100k Tabs voucher at Swasti Bel
       </header>
     </div>
   );
+
+  return window.location.pathname.includes("stripe") ? <StripeTest /> : app;
 }
 
 export default App;
