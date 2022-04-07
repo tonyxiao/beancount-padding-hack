@@ -32,15 +32,19 @@ function PaymentRequestButtonForm() {
         label: "Demo total",
         amount: 1099,
       },
+      // For apple pay, payer name doesn't show up separately, instead including it
+      // includes the entire billing address including the billing name
       requestPayerName: true,
+      // Email and phone however show up as separate line
       requestPayerEmail: true,
+      requestPayerPhone: true,
     });
 
     pr?.canMakePayment().then((r) => {
       if (r) {
         setPaymentRequest(pr!);
       } else {
-        console.log('Not availble for use', r)
+        console.log("Not availble for use", r);
       }
     });
   }, [stripe]);
