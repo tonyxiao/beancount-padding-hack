@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-import { loadStripe, Stripe } from "@stripe/stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 import {
   CardElement,
   Elements,
+  PaymentElement,
   PaymentRequestButtonElement,
   useStripe,
   // useStripe,
   // useElements,
 } from "@stripe/react-stripe-js";
 
-const stripePromise = loadStripe("pk_test_6pRNASCoBOKtIshFeQd4XMUh");
+const stripePromise = loadStripe("pk_test_Gjua0LS5XOQ4z3cSWjSM1nBM00wuQQ1lOP");
 
 export function CardForm() {
   // const _stripe = useStripe();
@@ -19,7 +20,7 @@ export function CardForm() {
   return <CardElement />;
 }
 
-function PaymentRequestButtonForm() {
+export function PaymentRequestButtonForm() {
   const stripe = useStripe();
   type PR = ReturnType<NonNullable<typeof stripe>["paymentRequest"]>;
   const [paymentRequest, setPaymentRequest] = useState<PR>();
@@ -57,6 +58,10 @@ function PaymentRequestButtonForm() {
   );
 }
 
+function PaymentForm() {
+  return <PaymentElement />;
+}
+
 export function StripeTest() {
   return (
     <div className="App">
@@ -75,10 +80,13 @@ export function StripeTest() {
             //   borderRadius: "4px",
             // },
           },
+          clientSecret:
+            "pi_3KlzLIH1sqCC8Cfy1adPx6wa_secret_T4KcjvDOJOiIDcTf259BRd67x",
         }}
       >
-        <PaymentRequestButtonForm />
+        {/* <PaymentRequestButtonForm /> */}
         {/* <CardForm /> */}
+        <PaymentForm />
       </Elements>
     </div>
   );
